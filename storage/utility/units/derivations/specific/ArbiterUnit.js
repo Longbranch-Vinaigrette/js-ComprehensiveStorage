@@ -1,19 +1,66 @@
 import DynamicUnit from "../DynamicUnit";
 
+/**Send post request
+ *
+ * @param {*} route
+ * @param {*} data
+ * @returns
+ */
+const sendPostRequest = async (route, data) => {
+	return await fetch(route, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: new Blob([JSON.stringify(data)], {
+			type: "application/json",
+		}),
+	})
+		.then((res) => {
+			return res.json();
+		})
+		.catch((err) => {
+			console.log(
+				`ComprehensiveStorage/storage/utility/units/derivations/specific/` +
+					`ArbiterUnit.js -> sendPostRequest(): ` +
+					`Error: `,
+				err
+			);
+			return undefined;
+		});
+};
+
+/**Send get request
+ *
+ * @param {*} route
+ * @returns
+ */
+const sendGetRequest = async (route) => {
+	return await fetch(this.route, {
+		method: "GET",
+		headers: {
+			Accept: "application/json",
+		},
+	})
+		.then((res) => {
+			return res.json();
+		})
+		.catch((err) => {
+			console.log(
+				`ComprehensiveStorage/storage/utility/units/derivations/specific/` +
+					`ArbiterUnit.js -> sendGetRequest(): ` +
+					`Error: `,
+				err
+			);
+			return undefined;
+		});
+};
+
 /**Dynamic unit
  */
 export default class ArbiterUnit extends DynamicUnit {
-	constructor(arbiterRoute, arbiter, alias = undefined) {
-		// Make some checks before anything
-		if (!arbiter) {
-			const msg =
-				`/lib/data/ComprehensiveStorage/storage/utility/units/derivations/specific` +
-				`/ArbitrerUnit.js -> ` +
-				`ArbiterUnit::constructor(): ` +
-				`No arbiter given.`;
-			throw new Error(msg);
-		}
-		if (!arbiterRoute) {
+	constructor(route, alias = undefined) {
+		if (!route) {
 			const msg =
 				`/lib/data/ComprehensiveStorage/storage/utility/units/derivations/specific` +
 				`/ArbitrerUnit.js -> ` +
@@ -21,31 +68,34 @@ export default class ArbiterUnit extends DynamicUnit {
 				`No arbiter route given.`;
 			throw new Error(msg);
 		}
-		// The route will be alias, if no alias is given, the route will be arbiterRoute
-		// which is recommended.
-		const actualRoute = alias ?? arbiterRoute;
+		// Get alias or route if it doesn't exist
+		const actualAlias = alias ?? route;
 
 		// Initialize DynamicUnit
-		super(actualRoute);
+		super(actualAlias);
 
 		// After DynamicUnit is initialized we are able to use this.
-		// Set arbiter
-		this.arbiter = arbiter;
 		// Set arbiter route
-		this.arbiterRoute = arbiterRoute;
+		this.route = route;
 	}
 
-	/**Update route data
+	/**Send request and update Unit data
 	 *
-	 * @param {Array} dataDependencies The data dependencies, will replace its respective fields
-	 * 			on the script.
+	 * Sends a request to the given route and updates this unit data.
+	 *
+	 * Determines whether it's a get request or not by the data given.
+	 * If it's undefined it will send a GET request.
+	 *
+	 * @param {Object} data If given it will send that data through a POST request.
 	 * @returns {Object} The result of the query.
 	 */
-	async updateData(dataDependencies = []) {
-		this.data = await this.arbiter.dispatch(
-			this.arbiterRoute,
-			dataDependencies
-		);
+	async dispatch(data = undefined) {
+		// Determine whether it's a get request or not by the data given.
+		if (data) {
+			this.data = await sendPostRequest(this.route, data);
+		} else {
+			this.data = await sendGetRequest(this.route);
+		}
 		return this.data;
 	}
 

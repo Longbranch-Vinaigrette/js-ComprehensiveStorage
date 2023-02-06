@@ -41,11 +41,10 @@ export default class ArbiterUnit extends DynamicUnit {
 	 * 			on the script.
 	 * @returns {Object} The result of the query.
 	 */
-	async updateData(dataDependencies = [], debug = false) {
+	async updateData(dataDependencies = []) {
 		this.data = await this.arbiter.dispatch(
 			this.arbiterRoute,
-			dataDependencies,
-			debug
+			dataDependencies
 		);
 		return this.data;
 	}

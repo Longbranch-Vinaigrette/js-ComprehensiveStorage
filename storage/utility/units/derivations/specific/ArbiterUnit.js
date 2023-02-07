@@ -36,7 +36,7 @@ const sendPostRequest = async (route, data) => {
  * @returns
  */
 const sendGetRequest = async (route) => {
-	return await fetch(this.route, {
+	return await fetch(route, {
 		method: "GET",
 		headers: {
 			Accept: "application/json",

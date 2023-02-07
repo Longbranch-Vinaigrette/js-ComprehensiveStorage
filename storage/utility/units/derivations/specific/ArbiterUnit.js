@@ -88,12 +88,14 @@ export default class ArbiterUnit extends DynamicUnit {
 	 */
 	async dispatch(data = undefined) {
 		// Determine whether it's a get request or not by the data given.
+		let newData = undefined
 		if (data) {
-			this.data = await sendPostRequest(this.fullUrl, data);
+			newData = await sendPostRequest(this.fullUrl, data);
 		} else {
-			this.data = await sendGetRequest(this.fullUrl);
+			newData = await sendGetRequest(this.fullUrl);
 		}
-		return this.data;
+		this.data = newData;
+		return newData;
 	}
 
 	/**Get alias.

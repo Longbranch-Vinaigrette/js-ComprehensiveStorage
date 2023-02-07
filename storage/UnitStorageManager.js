@@ -94,21 +94,6 @@ export default class UnitStorageManager extends UnitStorage {
 		return this.appendUnit(alias, unit);
 	}
 
-	/**Check if there's an arbiter
-	 *
-	 * Check if there's an arbiter if there's none throw an error.
-	 */
-	checkArbiter() {
-		// If there's no arbiter throw an error
-		if (!this.arbiter) {
-			const message =
-				`/lib/data/ComprehensiveStorage/storage/UnitStorageManager.js -> ` +
-				`UnitStorageManager::createAndAppendArbiterUnit(${arbiterRoute}, ${alias}): ` +
-				`The UnitStorageManager has no arbiter, therefore you can't add an arbiter unit.`;
-			throw new Error(message);
-		}
-	}
-
 	/**Create and appends an arbiter unit
 	 *
 	 * If alias is not given, then the key will be the route, which is the recommended behaviour.
@@ -118,8 +103,21 @@ export default class UnitStorageManager extends UnitStorage {
 	 * @param {*} alias The alias(or route) is the key to access the data.
 	 */
 	createAndAppendArbiterUnit(arbiterRoute, alias = undefined) {
-		this.checkArbiter();
-		const fullUrl = `${this.serverUrl}${arbiterRoute}`
+		const fullUrl = `${this.serverUrl}${arbiterRoute}`;
+		if (
+			!this.serverUrl ||
+			typeof this.serverUrl === typeof undefined ||
+			!this.arbiterRoute
+		) {
+			const message =
+				`ComprehensiveStorage/storage/UnitStorageManager.js -> ` +
+				`UnitStorageManager::createAndAppendArbiterUnit(): \n` +
+				`Arbiter route given: ${arbiterRoute}\n` +
+				`Alias: ${alias}\n` +
+				`Server url: ${this.serverUrl}\n` +
+				`Either arbiter route or server url doesn't exist.`;
+			throw new Error(message);
+		}
 
 		// Get the location of the unit
 		// If alias doesn't exist, then the location will be arbiterRoute

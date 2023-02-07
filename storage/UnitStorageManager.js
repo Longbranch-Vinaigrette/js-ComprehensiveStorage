@@ -40,6 +40,9 @@ export default class UnitStorageManager extends UnitStorage {
 	) {
 		super();
 
+		// Set server url
+		this.serverUrl = serverUrl;
+
 		// Create a collision handler
 		if (options && options.collisionOptions) {
 			this.collisionHandler = new CollisionHandler(

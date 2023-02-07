@@ -73,7 +73,6 @@ export default class ArbiterUnit extends DynamicUnit {
 
 		// Initialize DynamicUnit
 		super(actualAlias);
-		console.log(`Arbiter url: `, fullUrl);
 		this.fullUrl = fullUrl;
 	}
 

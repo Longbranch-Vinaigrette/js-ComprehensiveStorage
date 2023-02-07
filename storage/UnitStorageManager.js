@@ -17,9 +17,8 @@ export default class UnitStorageManager extends UnitStorage {
 	 * This class is intended to automatically handle data fetching, data updates and
 	 * cache.
 	 *
-	 * @param {class} arbiter The arbiter is an instance of an object that receives routes
-	 * 		and updates data accordingly, to receive updates and stuff add a function to the
-	 * 		class/object called 'dispatch'.
+	 * @param {string} serverUrl The backend server url for dispatching calls with
+	 * 			arbiter units.
 	 * @param {object} options Additional options to specify the behaviour of
 	 * 		ComprehensiveStorage.
 	 * 		@param {boolean} allowCollisions This flag is used to allow collisions or not, a
@@ -30,7 +29,8 @@ export default class UnitStorageManager extends UnitStorage {
 	 * 				of throws an error on collision, it will not do anything on collision.
 	 */
 	constructor(
-		arbiter = undefined,
+		// The server url
+		serverUrl,
 		options = {
 			collisionOptions: {
 				allowCollisions: false,
@@ -39,9 +39,6 @@ export default class UnitStorageManager extends UnitStorage {
 		}
 	) {
 		super();
-
-		// Set the arbiter
-		this.arbiter = arbiter;
 
 		// Create a collision handler
 		if (options && options.collisionOptions) {
@@ -116,12 +113,13 @@ export default class UnitStorageManager extends UnitStorage {
 	 *
 	 * If alias is not given, then the key will be the route, which is the recommended behaviour.
 	 *
-	 * @param {*} arbiterRoute The arbiter route is the backend route where the data will
+	 * @param {*} arbiterRoute The arbiter route is the enpoint route where the data will
 	 * 		retrieved from.
 	 * @param {*} alias The alias(or route) is the key to access the data.
 	 */
 	createAndAppendArbiterUnit(arbiterRoute, alias = undefined) {
 		this.checkArbiter();
+		const fullUrl = `${this.serverUrl}${arbiterRoute}`
 
 		// Get the location of the unit
 		// If alias doesn't exist, then the location will be arbiterRoute
@@ -132,7 +130,7 @@ export default class UnitStorageManager extends UnitStorage {
 		if (!canCreateUnit) return;
 
 		// Create unit
-		const unit = new ArbiterUnit(arbiterRoute, this.arbiter, alias);
+		const unit = new ArbiterUnit(fullUrl, alias);
 
 		// Append unit
 		return this.appendUnit(unitLocation, unit);

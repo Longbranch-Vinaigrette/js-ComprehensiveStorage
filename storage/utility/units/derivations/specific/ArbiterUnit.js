@@ -59,24 +59,22 @@ const sendGetRequest = async (route) => {
 /**Dynamic unit
  */
 export default class ArbiterUnit extends DynamicUnit {
-	constructor(route, alias = undefined) {
-		if (!route) {
+	constructor(fullUrl, alias = undefined) {
+		if (!fullUrl) {
 			const msg =
 				`/lib/data/ComprehensiveStorage/storage/utility/units/derivations/specific` +
 				`/ArbitrerUnit.js -> ` +
 				`ArbiterUnit::constructor(): ` +
-				`No arbiter route given.`;
+				`No url given.`;
 			throw new Error(msg);
 		}
 		// Get alias or route if it doesn't exist
-		const actualAlias = alias ?? route;
+		const actualAlias = alias ?? fullUrl;
 
 		// Initialize DynamicUnit
 		super(actualAlias);
-
-		// After DynamicUnit is initialized we are able to use this.
-		// Set arbiter route
-		this.route = route;
+		console.log(`Arbiter url: `, fullUrl);
+		this.fullUrl = fullUrl;
 	}
 
 	/**Send request and update Unit data
@@ -92,9 +90,9 @@ export default class ArbiterUnit extends DynamicUnit {
 	async dispatch(data = undefined) {
 		// Determine whether it's a get request or not by the data given.
 		if (data) {
-			this.data = await sendPostRequest(this.route, data);
+			this.data = await sendPostRequest(this.fullUrl, data);
 		} else {
-			this.data = await sendGetRequest(this.route);
+			this.data = await sendGetRequest(this.fullUrl);
 		}
 		return this.data;
 	}

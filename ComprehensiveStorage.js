@@ -21,10 +21,13 @@ import UnitStorageManager from "./storage/UnitStorageManager";
  * the python file.
  *
  * I believe on programming explicitism.
+ * 
+ * @param {string} serverUrl The server url where the arbiter unit will make calls
+ * 			to.
  */
 export default class ComprehensiveStorage extends UnitStorageManager {
 	constructor(
-		arbiter = undefined,
+		serverUrl,
 		options = {
 			collisionOptions: {
 				allowCollisions: false,
@@ -32,7 +35,9 @@ export default class ComprehensiveStorage extends UnitStorageManager {
 			},
 		}
 	) {
-		super(arbiter, options);
+		super(serverUrl, options);
+		
+		// Instantiate the find class
 		this.find = new Find(this.units, true);
 	}
 }

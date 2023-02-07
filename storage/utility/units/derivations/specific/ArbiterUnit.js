@@ -6,7 +6,7 @@ import DynamicUnit from "../DynamicUnit";
  * @param {*} data
  * @returns
  */
-const sendPostRequest = async (route, data) => {
+export const sendPostRequest = async (route, data) => {
 	return await fetch(route, {
 		method: "POST",
 		headers: {
@@ -35,7 +35,7 @@ const sendPostRequest = async (route, data) => {
  * @param {*} route
  * @returns
  */
-const sendGetRequest = async (route) => {
+export const sendGetRequest = async (route) => {
 	return await fetch(route, {
 		method: "GET",
 		headers: {
